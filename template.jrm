@@ -1,0 +1,7 @@
+Bits: 010010100101001001001101-1-0*-1-
+Bytes: JRM-SomeRandomShit-
+Psudo: JRM-some number of zeros bounded by ones->
+Loop:
+	8-bit char
+	n-bit representation
+	x-bit spacer
