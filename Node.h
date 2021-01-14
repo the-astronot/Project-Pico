@@ -38,7 +38,7 @@ public:
 	std::string getBinary() {return this->binary;}
 
 };
-
+/*
 void assignBinary(Character* &firstChar, LeafInfo leaf_struct) {
 	int* leaf_plot = leaf_struct.leaves;
 	int num_leaves = leaf_struct.num_leaves;
@@ -79,5 +79,6 @@ void assignBinary(Character* &firstChar, LeafInfo leaf_struct) {
 		std::cout << currentNode->getLength() << std::endl;
 	}
 }
+*/
 
 #endif

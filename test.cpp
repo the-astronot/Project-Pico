@@ -6,11 +6,12 @@
 #include "Character.h"
 #include "Tree.h"
 //#include "Node.h"
+#include "leaff.h"
 
 
 int main() {
 
-  std::string filename = "tetris.txt";
+  std::string filename = "hamlet.txt";
 	//std::cout << "ENTER FILENAME: ";
 	//std::cin >> filename;
 

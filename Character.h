@@ -16,8 +16,8 @@ public:
 	Character *next;
 
 	// Constructor
-	Character(char Character) {
-		this->character = Character;
+	Character(char inCharacter) {
+		this->character = inCharacter;
 		this->num_used = 1;
 	}
 
