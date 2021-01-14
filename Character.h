@@ -3,7 +3,7 @@
 #define __Character_h__
 
 #include <string>
-#include "bitf.h"
+//#include "bitf.h"
 
 class Character {
 private:
@@ -32,28 +32,6 @@ public:
 	//void reset() {this->num_used = 0;}
 };
 
-void sort(Character* &first) {
-	Character* current = first;
-	Character* temp;
-	Character* previous;
-	while(current->next!=NULL) {
-		if (current->getTimesUsed() >= current->next->getTimesUsed()) {
-			previous = current;
-			current = current->next;
-		} else {
-			temp = current->next;
-			if (previous != NULL) {
-				previous->next = current->next;
-			} else {
-					first = current->next;
-			}
-			current->next = temp->next;
-			temp->next = current;
-			current = first;
-			previous = NULL;
-		}
-	}
-}
-
+void sort(Character* &first);
 
 #endif
