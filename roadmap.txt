@@ -4,7 +4,7 @@ PROJECT-PICO:
 		- Character Class: 100%
 		- Character Frequency: 100%
 		- Tree Development: 100%
-		- Assigning Binary Strings to Characters: 0%
+		- Assigning Binary Strings to Characters: 100%
 		- Build Header for Compressed File - 0%
 		- Replace Characters with Binary Strings: 0%
 		- Write Binary Strings to File: 0%
