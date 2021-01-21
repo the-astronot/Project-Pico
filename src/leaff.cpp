@@ -7,14 +7,12 @@ void leaff::assignBinary(Character* &first_Char, LeafInfo leafstruct) {
 	Character* current_Char = first_Char;
 	std::vector<int> binary_ref;
 	std::string binary_str;
-	bool adjusted;
 	bool isfirstchar = true;
 	bool started_tree = false;
 
 	int i = 0;
-	int j;
 	binary_ref.push_back(0);
-	while(current_Char!=NULL && i < num_leaves) {
+	while(current_Char!=nullptr && i < num_leaves) {
 		//std::cout << "MADE IT IN THE LOOP" << std::endl;
 		if(*(leaves+i+1) > 0) {
 			started_tree = true;

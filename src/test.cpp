@@ -5,14 +5,13 @@
 #include "bitf.h"
 #include "Character.h"
 #include "Tree.h"
-//#include "Node.h"
 #include "leaff.h"
 
 
 int main() {
 
-	bool print = false;
-  std::string filename = "../test_files/hamlet.txt";
+	bool print = true;
+  std::string filename = "../test_files/tetris.txt";
 	//std::cout << "ENTER FILENAME: ";
 	//std::cin >> filename;
 
@@ -29,6 +28,7 @@ int main() {
 	Character* first_Char;
 	Character* current_Char;
 	bool create_new;
+	int num_chars = 0;
 
   while(!(rf.eof())) {
     rf.read((char*) &byte, sizeof(byte));
@@ -55,15 +55,17 @@ int main() {
 
   rf.close();
 
-	sort(first_Char);
-
-	int num_chars = 0;
 
 	current_Char = first_Char;
 	while(current_Char!=NULL) {
 		current_Char = current_Char->next;
 		num_chars++;
 	}
+	//current_Char->next = new Character();
+	//current_Char->next->setNum(num_chars);
+	//num_chars++;
+
+	sort(first_Char);
 
 	Tree* tree = new Tree(num_chars, first_Char, print);
 	LeafInfo best_leaves = tree->getBestLeaves();

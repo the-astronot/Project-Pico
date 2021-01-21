@@ -2,23 +2,23 @@
 
 void sort(Character* &first) {
 	Character* current = first;
-	Character* temp;
-	Character* previous;
-	while(current->next!=NULL) {
+	Character* temp = nullptr;
+	Character* previous = nullptr;
+	while(current->next!=nullptr) {
 		if (current->getTimesUsed() >= current->next->getTimesUsed()) {
 			previous = current;
 			current = current->next;
 		} else {
 			temp = current->next;
-			if (previous != NULL) {
+			if (previous != nullptr) {
 				previous->next = current->next;
 			} else {
-					first = current->next;
+				first = current->next;
 			}
 			current->next = temp->next;
 			temp->next = current;
 			current = first;
-			previous = NULL;
+			previous = nullptr;
 		}
 	}
 }

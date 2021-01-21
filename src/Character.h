@@ -17,18 +17,20 @@ public:
 
 	// Constructor
 	Character(char inCharacter) {
-		this->character = inCharacter;
-		this->num_used = 1;
+		character = inCharacter;
+		num_used = 2;
+		next = nullptr;
 	}
 
 	//Accessors
-	int getTimesUsed() {return this->num_used;}
-	char getCharacter() {return this->character;}
-	std::string getBinary() {return this->binary;}
+	int getTimesUsed() {return num_used;}
+	char getCharacter() {return character;}
+	std::string getBinary() {return binary;}
 
 	// Setters
-	void plusOne() {this->num_used++;}
-	void setBinary(std::string binary) {this->binary = binary;}
+	void plusOne() {num_used++;}
+	void setNum(int num) {num_used = num;}
+	void setBinary(std::string Binary) {binary = Binary;}
 	//void reset() {this->num_used = 0;}
 };
 

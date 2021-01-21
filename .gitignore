@@ -33,3 +33,4 @@
 
 # Junk files
 .fuse*
+.vgcore*
