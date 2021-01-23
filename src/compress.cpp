@@ -23,18 +23,18 @@ void writeBody(FileWrite* &writer, std::vector<std::string> filenames,
 
 int main() {
 	std::vector<std::string> filenames;
-	std::string infilename0 = "../test_files/large_corpus/E.coli";
-	std::string infilename1 = "../test_files/large_corpus/bible.txt";
-	std::string infilename2 = "../test_files/large_corpus/world192.txt";
+	//std::string infilename0 = "../test_files/large_corpus/E.coli";
+	//std::string infilename1 = "../test_files/large_corpus/bible.txt";
+	//std::string infilename2 = "../test_files/large_corpus/world192.txt";
 	//std::string outfilename = "../large_corpus.pico";
-	//std::string infilename0 = "../test_files/my_tests/basic.txt";
+	std::string infilename0 = "../test_files/my_tests/basic.txt";
 	//std::string infilename1 = "../test_files/my_tests/hamlet.txt";
 	//std::string infilename2 = "../test_files/my_tests/shakespeare.txt";
 	//std::string infilename3 = "../test_files/my_tests/tetris.txt";
-	std::string outfilename = "../compressed_files/large_corpus.pico";
+	std::string outfilename = "../compressed_files/basic.pico";
 	filenames.push_back(infilename0);
-	filenames.push_back(infilename1);
-	filenames.push_back(infilename2);
+	//filenames.push_back(infilename1);
+	//filenames.push_back(infilename2);
 	//filenames.push_back(infilename3);
 
 	bool print = true;
@@ -84,7 +84,7 @@ void addCharacter(Character* &first_Char, char byte) {
 // Code to Assign Binary Strings to All Chaaracters in the Files
 void mapping(std::vector<std::string> filenames, Character* &first_Char) {
 	bool print = false;
-	//Character* current_Char = nullptr;
+	Character* current_Char = nullptr;
 	char byte;
 	bool create_new, infile_exists, eof;
 	int num_chars;
