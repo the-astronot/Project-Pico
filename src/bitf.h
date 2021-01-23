@@ -1,7 +1,7 @@
-
 #ifndef __bitf_h__
 #define __bitf_h__
 
+#include <string>
 #include <math.h>
 
 namespace bitf {
@@ -17,6 +17,7 @@ namespace bitf {
   int get(char &byte, int index);
   void toHex(char byte, char (&hex)[2]);
 	void toBinary(char byte, char (&binary)[8]);
+	std::string toBinaryString(char byte);
 }
 
 #endif

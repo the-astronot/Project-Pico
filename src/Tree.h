@@ -85,8 +85,8 @@ public:
 		}
 		if (print) {
 			printBestTree();
+			std::cout << score << std::endl;
 		}
-		std::cout << score << std::endl;
 	}
 
 	bool branchTree() {

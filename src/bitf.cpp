@@ -34,3 +34,17 @@ void bitf::toBinary(char byte, char (&binary)[8]) {
     binary[7-i] = get(byte,i) + '0';
   }
 }
+
+std::string bitf::toBinaryString(char byte) {
+	std::string bits;
+	int bit;
+	for (int i=0; i<8; i++) {
+    bit = get(byte,7-i);
+		if (bit == 0) {
+			bits += "0";
+		} else {
+			bits += "1";
+		}
+  }
+	return bits;
+}
