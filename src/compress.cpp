@@ -14,6 +14,7 @@ typedef unsigned int uint;
 
 
 void getInputFiles();
+void addCharacter(Character* &first_Char, char byte);
 void mapping(std::vector<std::string> filenames, Character* &first_Char);
 void writeHeader(FileWrite* &headerwriter, Character* first_Char);
 void writeBody(FileWrite* &writer, std::vector<std::string> filenames,
@@ -25,10 +26,16 @@ int main() {
 	std::string infilename0 = "../test_files/large_corpus/E.coli";
 	std::string infilename1 = "../test_files/large_corpus/bible.txt";
 	std::string infilename2 = "../test_files/large_corpus/world192.txt";
-	std::string outfilename = "../compressed.pico";
+	//std::string outfilename = "../large_corpus.pico";
+	//std::string infilename0 = "../test_files/my_tests/basic.txt";
+	//std::string infilename1 = "../test_files/my_tests/hamlet.txt";
+	//std::string infilename2 = "../test_files/my_tests/shakespeare.txt";
+	//std::string infilename3 = "../test_files/my_tests/tetris.txt";
+	std::string outfilename = "../compressed_files/large_corpus.pico";
 	filenames.push_back(infilename0);
 	filenames.push_back(infilename1);
 	filenames.push_back(infilename2);
+	//filenames.push_back(infilename3);
 
 	bool print = true;
 	Character* first_Char = nullptr;
@@ -40,111 +47,67 @@ int main() {
 	writeHeader(writer, first_Char);
 	writeBody(writer, filenames, first_Char);
 
-	/*
-	bool not_file_end = true;
-	bool infile_exists;
-	bool outfile_exists;
-	int buffersize = 32;
-	char single_char;
-	char* inbuffer = new char[buffersize];
-	char* outbuffer = new char[buffersize*2];
-
-  FileRead* reader = new FileRead();
-	infile_exists = reader->setFileName(infilename);
-	FileWrite* writer = new FileWrite();
-	outfile_exists = writer->setFileName(outfilename);
-	if(infile_exists && outfile_exists) {
-		while(not_file_end) {
-			not_file_end = reader->readBuffer();
-			inbuffer = reader->getBuffer();
-			for(int i=0; i<buffersize; i++) {
-				std::cout << *(inbuffer + i);
-			}
-			writer->writeBuffer(inbuffer, buffersize);
-		}
-	}
-	writer->closeFile();
-	*/
-
-	/*
-	current = first_Char;
-	while (current != nullptr && print) {
-		if (current->getCharacter() != '\0'){
-			bitf::toBinary(current->getCharacter(), bits);
-			std::cout << current->getCharacter();
-			std::cout << ":" << bits;
-		} else {
-			if(current->isDelimiter()) {
-				std::cout << "Del" << ":";
-				std::cout << "......";
-			}
-			if(current->isEndofFile()) {
-				std::cout << "EOF" << ":";
-				std::cout << "......";
-			}
-			if(current->isEndofTitle()) {
-				std::cout << "EOT" << ":";
-				std::cout << "......";
-			}
-			if(current->isEndofCompFile()) {
-				std::cout << "EOCF" << ":";
-				std::cout << ".....";
-			}
-		}
-		std::cout << ":" << current->getTimesUsed();
-		std::cout << ":" << current->getBinary() << std::endl;
-		current = current->next;
-	}
-	*/
 	return 0;
+}
+
+
+// Add Character
+void addCharacter(Character* &first_Char, char byte) {
+	bool create_new;
+	Character* current_Char;
+
+	create_new = true;
+	if (first_Char == nullptr) {
+		first_Char = new Character(byte);
+	} else {
+		current_Char = first_Char;
+		while(true) {
+			//std::cout << "In Loop" << std::endl;
+			if (current_Char->getCharacter() == byte) {
+				//std::cout << "Character Exists" << std::endl;
+				current_Char->plusOne();
+				create_new = false;
+				break;
+			} else {
+				if (current_Char->next == nullptr) {break;}
+				else {current_Char = current_Char->next;}
+			}
+		}
+		if (create_new) {
+			//std::cout << "New Character" << std::endl;
+			current_Char->next = new Character(byte);
+		}
+	}
 }
 
 
 // Code to Assign Binary Strings to All Chaaracters in the Files
 void mapping(std::vector<std::string> filenames, Character* &first_Char) {
 	bool print = false;
-	Character* current_Char = nullptr;
+	//Character* current_Char = nullptr;
 	char byte;
-	bool create_new;
-	bool infile_exists;
-	bool eof;
+	bool create_new, infile_exists, eof;
 	int num_chars;
 	int files_added = 0;
+	std::string filename;
 	FileRead* freqreader = new FileRead();
 
 	for(uint i=0; i<filenames.size(); i++) {
-		infile_exists = freqreader->setFileName(filenames[i]);
-		std::cout << filenames[i] << std::endl;
+		filename = filenames[i];
+		infile_exists = freqreader->setFileName(filename);
+		//std::cout << filenames[i] << std::endl;
 		if(infile_exists) {
-			std::cout << "File Exists" << std::endl;
+			//std::cout << "File Exists" << std::endl;
+			for(uint j=0; j<filename.size(); j++) {
+				addCharacter(first_Char, filename[j]);
+			}
 			eof = false;
 			files_added++;
 			while(!eof) {
 				eof = !(freqreader->readChar());
 				byte = freqreader->getChar();
 				//std::cout << byte; //<< std::endl;
-				create_new = true;
-				if (first_Char == nullptr) {
-					first_Char = new Character(byte);
-				} else {
-					current_Char = first_Char;
-					while(true) {
-						//std::cout << "In Loop" << std::endl;
-						if (current_Char->getCharacter() == byte) {
-							//std::cout << "Character Exists" << std::endl;
-							current_Char->plusOne();
-							create_new = false;
-							break;
-						} else {
-							if (current_Char->next == nullptr) {break;}
-							else {current_Char = current_Char->next;}
-						}
-					}
-					if (create_new) {
-						//std::cout << "New Character" << std::endl;
-						current_Char->next = new Character(byte);
-					}
-				}
+				addCharacter(first_Char, byte);
 		  }
 		}
 	}
@@ -176,20 +139,12 @@ void mapping(std::vector<std::string> filenames, Character* &first_Char) {
 	current_Char->setNum(num_chars+2);
 	num_chars++;
 
-	std::cout << num_chars << std::endl;
-
 	sort(first_Char);
 
 	// Establish and Improve Tree, Assign Binary Strings
 	Tree* tree = new Tree(num_chars, first_Char, print);
 	LeafInfo best_leaves = tree->getBestLeaves();
-/*
-	std::cout << "[";
-	for(int i = 1; i <best_leaves.num_leaves; i++) {
-		std::cout << *(best_leaves.leaves+i) << " ";
-	}
-	std::cout << "]" << std::endl;
-*/
+
 	leaff::assignBinary(first_Char, best_leaves);
 }
 
@@ -263,18 +218,17 @@ void writeHeader(FileWrite* &headerwriter, Character* first_Char) {
 			}
 			headerwriter->writeBuffer(buffer_array, buffer_size);
 			strbuffer = strbuffer.substr(buffer_size*8);
-			std::cout << strbuffer << std::endl;
 		}
 	}
 	// Finish up
 	// Fill out trailing byte with zeroes, append to file
 	max_bytes = strbuffer.size()/8 + 1;
-	std::cout << strbuffer.size() << ":" << max_bytes << std::endl;
-	std::cout << strbuffer << std::endl;
 	for(byte_index=0;byte_index<max_bytes;byte_index++) {
 		for(bit_index=0;bit_index<8;bit_index++) {
 			str_index = byte_index*8+bit_index;
-			if(str_index>=strbuffer.size()) {
+			if(byte_index == max_bytes-1 && bit_index == 7) {
+				bitf::set(buffer_array[byte_index],7-bit_index); //
+			} else if(str_index>=strbuffer.size()) {
 				bitf::unset(buffer_array[byte_index],7-bit_index);
 			} else if(strbuffer[str_index] == '1') {
 				bitf::set(buffer_array[byte_index],7-bit_index);
@@ -298,7 +252,9 @@ void writeBody(FileWrite* &writer, std::vector<std::string> filenames,
 	std::string filename;
 	std::string strbuffer;
 	uint buffer_size = 32;
-	Char* buffer_array = new Char[buffer_size];
+	int byte_index, bit_index, str_index, max_bytes;
+	char byte;
+	char* buffer_array = new char[buffer_size];
 
 	// Find the EoT, EoF,EoCF
 	current_Char = first_Char;
@@ -317,16 +273,60 @@ void writeBody(FileWrite* &writer, std::vector<std::string> filenames,
 			eof = false;
 			// Read in filename
 			for(uint j=0; j<filename.size(); j++) {
-				current_Char =
+				current_Char = first_Char;
+				while(current_Char!=nullptr) {
+					if(current_Char->getCharacter() == filename[j]) {
+						strbuffer += current_Char->getBinary();
+						break;
+					}
+					current_Char = current_Char->next;
+				}
 			}
+			strbuffer += title->getBinary();
 			while(!eof) {
 				eof = !(reader->readChar());
 				byte = reader->getChar();
-
+				current_Char = first_Char;
+				while(current_Char!=nullptr) {
+					if(current_Char->getCharacter() == byte) {
+						strbuffer += current_Char->getBinary();
+						break;
+					}
+					current_Char = current_Char->next;
+				}
+				if(strbuffer.size()>=buffer_size*8) {
+					for(byte_index=0;byte_index<buffer_size;byte_index++) {
+						for(bit_index=0;bit_index<8;bit_index++) {
+							str_index = byte_index*8+bit_index;
+							if(strbuffer[str_index] == '1') {
+								bitf::set(buffer_array[byte_index],7-bit_index);
+							} else {
+								bitf::unset(buffer_array[byte_index],7-bit_index);
+							}
+						}
+					}
+					writer->writeBuffer(buffer_array, buffer_size);
+					strbuffer = strbuffer.substr(buffer_size*8);
+				}
 		  }
+			strbuffer += eoF->getBinary();
+		}
+	}
+	strbuffer += eoCF->getBinary();
+	// Clean Up
+	max_bytes = strbuffer.size()/8 + 1;
+	for(byte_index=0;byte_index<max_bytes;byte_index++) {
+		for(bit_index=0;bit_index<8;bit_index++) {
+			str_index = byte_index*8+bit_index;
+			if(str_index>=strbuffer.size()) {
+				bitf::unset(buffer_array[byte_index],7-bit_index);
+			} else if(strbuffer[str_index] == '1') {
+				bitf::set(buffer_array[byte_index],7-bit_index);
+			} else {
+				bitf::unset(buffer_array[byte_index],7-bit_index);
+			}
 		}
 	}
 
-
-	headerwriter->closeFile();
+	writer->closeFile();
 }
