@@ -10,5 +10,6 @@ PROJECT-PICO:
 		- Write Binary Strings to File: 100%
 
 	DECOMPRESSION
-		- Get Dictionary from header of file:
-		- For all strings, convert to regular:
+		- Get Dictionary from header of file: 0%
+		- For all strings, convert to regular: 0%
+		- Check Endianness:

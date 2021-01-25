@@ -1,53 +1,37 @@
-#include <iostream>
-#include <fstream>
-#include <string>
-#include <vector>
-#include "FileRead.h"
-#include "FileWrite.h"
-#include "bitf.h"
-#include "Character.h"
-#include "Tree.h"
-#include "leaff.h"
-
-
-typedef unsigned int uint;
-
-
-void getInputFiles();
-void addCharacter(Character* &first_Char, char byte);
-void mapping(std::vector<std::string> filenames, Character* &first_Char);
-void writeHeader(FileWrite* &headerwriter, Character* first_Char);
-void writeBody(FileWrite* &writer, std::vector<std::string> filenames,
-	 							Character* first_Char);
+#include "compress.h"
 
 
 int main() {
 	std::vector<std::string> filenames;
-	//std::string infilename0 = "../test_files/large_corpus/E.coli";
-	//std::string infilename1 = "../test_files/large_corpus/bible.txt";
-	//std::string infilename2 = "../test_files/large_corpus/world192.txt";
-	//std::string outfilename = "../large_corpus.pico";
-	std::string infilename0 = "../test_files/my_tests/basic.txt";
-	//std::string infilename1 = "../test_files/my_tests/hamlet.txt";
-	//std::string infilename2 = "../test_files/my_tests/shakespeare.txt";
-	//std::string infilename3 = "../test_files/my_tests/tetris.txt";
-	std::string outfilename = "../compressed_files/basic.pico";
+	std::string infilename0 = "test_files/large_corpus/E.coli";
+	std::string infilename1 = "test_files/large_corpus/bible.txt";
+	std::string infilename2 = "test_files/large_corpus/world192.txt";
+	std::string outfilename = "large_corpus.pico";
+	//std::string infilename0 = "test_files/my_tests/basic.txt";
+	//std::string infilename1 = "test_files/my_tests/hamlet.txt";
+	//std::string infilename2 = "test_files/my_tests/shakespeare.txt";
+	//std::string infilename3 = "test_files/my_tests/tetris.txt";
+	//std::string outfilename = "compressed_files/my_tests.pico";
 	filenames.push_back(infilename0);
-	//filenames.push_back(infilename1);
-	//filenames.push_back(infilename2);
+	filenames.push_back(infilename1);
+	filenames.push_back(infilename2);
 	//filenames.push_back(infilename3);
 
 	bool print = true;
+	bool cont;
 	Character* first_Char = nullptr;
 	Character* current = nullptr;
 	FileWrite* writer = new FileWrite();
 
-	mapping(filenames, first_Char);
-	writer->setFileName(outfilename);
-	writeHeader(writer, first_Char);
-	writeBody(writer, filenames, first_Char);
+	cont = mapping(filenames, first_Char);
+	if (cont) {
+		writer->setFileName(outfilename);
+		writeHeader(writer, first_Char);
+		writeBody(writer, filenames, first_Char);
+		return 0;
+	}
 
-	return 0;
+	return 1;
 }
 
 
@@ -62,9 +46,7 @@ void addCharacter(Character* &first_Char, char byte) {
 	} else {
 		current_Char = first_Char;
 		while(true) {
-			//std::cout << "In Loop" << std::endl;
 			if (current_Char->getCharacter() == byte) {
-				//std::cout << "Character Exists" << std::endl;
 				current_Char->plusOne();
 				create_new = false;
 				break;
@@ -74,7 +56,6 @@ void addCharacter(Character* &first_Char, char byte) {
 			}
 		}
 		if (create_new) {
-			//std::cout << "New Character" << std::endl;
 			current_Char->next = new Character(byte);
 		}
 	}
@@ -82,12 +63,12 @@ void addCharacter(Character* &first_Char, char byte) {
 
 
 // Code to Assign Binary Strings to All Chaaracters in the Files
-void mapping(std::vector<std::string> filenames, Character* &first_Char) {
+bool mapping(std::vector<std::string> filenames, Character* &first_Char) {
 	bool print = false;
 	Character* current_Char = nullptr;
 	char byte;
 	bool create_new, infile_exists, eof;
-	int num_chars;
+	int num_chars = 1;
 	int files_added = 0;
 	std::string filename;
 	FileRead* freqreader = new FileRead();
@@ -95,9 +76,7 @@ void mapping(std::vector<std::string> filenames, Character* &first_Char) {
 	for(uint i=0; i<filenames.size(); i++) {
 		filename = filenames[i];
 		infile_exists = freqreader->setFileName(filename);
-		//std::cout << filenames[i] << std::endl;
 		if(infile_exists) {
-			//std::cout << "File Exists" << std::endl;
 			for(uint j=0; j<filename.size(); j++) {
 				addCharacter(first_Char, filename[j]);
 			}
@@ -106,46 +85,49 @@ void mapping(std::vector<std::string> filenames, Character* &first_Char) {
 			while(!eof) {
 				eof = !(freqreader->readChar());
 				byte = freqreader->getChar();
-				//std::cout << byte; //<< std::endl;
 				addCharacter(first_Char, byte);
 		  }
 		}
 	}
 	// Count em up
 	current_Char = first_Char;
-	num_chars = 1;
-	while(current_Char->next!=nullptr) {
+	if(current_Char!=nullptr) {
+		num_chars = 1;
+		while(current_Char->next!=nullptr) {
+			current_Char = current_Char->next;
+			num_chars++;
+		}
+
+		// Add End of Compressed File Character
+		current_Char->next = new Character(false,false,true,false);
 		current_Char = current_Char->next;
 		num_chars++;
+		// Add End of Title Characters
+		current_Char->next = new Character(false,false,false,true);
+		current_Char = current_Char->next;
+		current_Char->setNum(files_added);
+		num_chars++;
+		// Add End of Individual File Characters
+		current_Char->next = new Character(false,true,false,false);
+		current_Char = current_Char->next;
+		current_Char->setNum(files_added);
+		num_chars++;
+		//Add Delimiter
+		current_Char->next = new Character(true,false,false,false);
+		current_Char = current_Char->next;
+		current_Char->setNum(num_chars+2);
+		num_chars++;
+
+		sort(first_Char);
+
+		// Establish and Improve Tree, Assign Binary Strings
+		Tree* tree = new Tree(num_chars, first_Char, print);
+		LeafInfo best_leaves = tree->getBestLeaves();
+
+		leaff::assignBinary(first_Char, best_leaves);
 	}
-
-	// Add End of Compressed File Character
-	current_Char->next = new Character(false,false,true,false);
-	current_Char = current_Char->next;
-	num_chars++;
-	// Add End of Title Characters
-	current_Char->next = new Character(false,false,false,true);
-	current_Char = current_Char->next;
-	current_Char->setNum(files_added);
-	num_chars++;
-	// Add End of Individual File Characters
-	current_Char->next = new Character(false,true,false,false);
-	current_Char = current_Char->next;
-	current_Char->setNum(files_added);
-	num_chars++;
-	//Add Delimiter
-	current_Char->next = new Character(true,false,false,false);
-	current_Char = current_Char->next;
-	current_Char->setNum(num_chars+2);
-	num_chars++;
-
-	sort(first_Char);
-
-	// Establish and Improve Tree, Assign Binary Strings
-	Tree* tree = new Tree(num_chars, first_Char, print);
-	LeafInfo best_leaves = tree->getBestLeaves();
-
-	leaff::assignBinary(first_Char, best_leaves);
+	if(first_Char==nullptr) {return false;}
+	return true;
 }
 
 
