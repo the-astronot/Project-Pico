@@ -1,5 +1,5 @@
-#ifndef __uncompress_h__
-#define __uncompress_h__
+#ifndef __decompress_h__
+#define __decompress_h__
 
 #include <iostream>
 #include <fstream>
@@ -11,5 +11,10 @@
 #include "Character.h"
 #include "leaff.h"
 
+namespace decompress {
+
+	typedef unsigned int uint;
+
+}
 
 #endif

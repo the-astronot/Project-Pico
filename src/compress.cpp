@@ -1,6 +1,6 @@
 #include "compress.h"
 
-
+/*
 int main() {
 	std::vector<std::string> filenames;
 	std::string infilename0 = "test_files/large_corpus/E.coli";
@@ -33,10 +33,11 @@ int main() {
 
 	return 1;
 }
-
+*/
+//using namespace compression;
 
 // Add Character
-void addCharacter(Character* &first_Char, char byte) {
+void compression::addCharacter(Character* &first_Char, char byte) {
 	bool create_new;
 	Character* current_Char;
 
@@ -63,7 +64,7 @@ void addCharacter(Character* &first_Char, char byte) {
 
 
 // Code to Assign Binary Strings to All Chaaracters in the Files
-bool mapping(std::vector<std::string> filenames, Character* &first_Char) {
+bool compression::mapping(std::vector<std::string> filenames, Character* &first_Char) {
 	bool print = false;
 	Character* current_Char = nullptr;
 	char byte;
@@ -132,7 +133,7 @@ bool mapping(std::vector<std::string> filenames, Character* &first_Char) {
 
 
 // Code to Write the Dictionary-Defining Header of the File
-void writeHeader(FileWrite* &headerwriter, Character* first_Char) {
+void compression::writeHeader(FileWrite* &headerwriter, Character* first_Char) {
 	Character* current_Char = first_Char;
 	Character* del = nullptr;
 	int del_size;
@@ -224,7 +225,7 @@ void writeHeader(FileWrite* &headerwriter, Character* first_Char) {
 
 
 // Writes the Body of the File
-void writeBody(FileWrite* &writer, std::vector<std::string> filenames,
+void compression::writeBody(FileWrite* &writer, std::vector<std::string> filenames,
 	 							Character* first_Char) {
 
 	Character* current_Char;

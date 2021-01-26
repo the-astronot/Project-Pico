@@ -1,11 +1,10 @@
 CXX=g++
 CXXFLAGS=-std=c++1z -g
-MAIN=compress.out
+MAIN=compress
 SRC_DIR=src
-SRCS= bitf.cpp Character.cpp compress.cpp FileRead.cpp FileWrite.cpp leaff.cpp
-FULLSRCS = $(foreach source,$(SRCS),$(wildcard $(SRC_DIR)/$(source)))
+SRCS=$(wildcard $(SRC_DIR)/*.cpp)
 INCLUDES= -I./include
-OBJS=$(FULLSRCS:.cpp=.o)
+OBJS=$(SRCS:.cpp=.o)
 
 .PHONY: all clean
 
