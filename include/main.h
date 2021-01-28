@@ -8,10 +8,14 @@
 #include <filesystem>
 #include "FileRead.h"
 #include "FileWrite.h"
+#include "Character.h"
 #include "compress.h"
 //#include "decompress.h"
 
 
+namespace fs = std::filesystem;
+
+bool addFiles(fs::path pathname, std::vector<std::string> &filenames);
 bool options(std::string option_name, std::vector<bool> &options);
 void loadDefaults(std::vector<bool> &options);
 

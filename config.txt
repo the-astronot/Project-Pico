@@ -5,4 +5,5 @@
 application=compression
 display=none
 password=none
+name=comp.pico
 hotel=trivago

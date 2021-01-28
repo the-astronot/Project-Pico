@@ -13,3 +13,8 @@ PROJECT-PICO:
 		- Get Dictionary from header of file: 0%
 		- For all strings, convert to regular: 0%
 		- Check Endianness:
+
+	APPLICATION
+		- Allow flags to customize settings: 50%
+		- Create base configs file: 50%
+		- Create Makefile: 100%

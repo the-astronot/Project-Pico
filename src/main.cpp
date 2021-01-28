@@ -1,35 +1,40 @@
 #include "main.h"
 
-namespace fs = std::filesystem;
 
-std::string password;
+std::string password,outname;
 std::vector<std::string> optionnames = {"comp","decomp","display=",
 																				"password=","application=",
-																				"makedefault-"};
-
+																				"makedefault-","name="};
+// Global Vars
+////////////////////////////////////////////////////////////////////////////////
 int main(int argc, char *argv[]) {
 
 	bool arg_error = false;
 	std::string argstr;
 	std::vector<std::string> filenames;
+	fs::path file_path;
+	//////////////////////////////////////////////////////////////////////////////
 	std::vector<std::string> bool_str ={"Compress", "DispNone", "DispAll",
 	 																		"DispBasic", "Passwd"};
 	std::vector<bool> bool_options = {true,true,false,false,false};
+	// Options
+	//////////////////////////////////////////////////////////////////////////////
 
-	loadDefaults(bool_options);
+	loadDefaults(bool_options); // Start out with defaults, then replace as
+															// Necessary
 
-	for(int i=1; i<argc; i++) {
+	for(int i=1; i<argc; i++) { // Check out all the args
 		argstr = argv[i];
-		if(argstr[0] == '-') {
-			// Args
+		if(argstr[0] == '-') { // Args
 			argstr = argstr.substr(1);
 			arg_error = options(argstr, bool_options);
-		} else {
-			// Files
-			filenames.push_back(argstr);
+		} else { // Files >>>--------------------------------->FIX TO HANDLE COMPLEX
+			//filenames.push_back(argstr);
+			file_path = argstr;
+			bool fileadd = addFiles(file_path, filenames);
 		}
 		if (arg_error) {
-			std::cout << "One or more unknown args" << std::endl;
+			std::cout << "Error with Arg(" << i << "): -" << argstr << std::endl;
 			return 1;
 		}
 	}
@@ -44,11 +49,78 @@ int main(int argc, char *argv[]) {
 		}
 	}
 
-	//std::cout << "Current path is " << fs::current_path() << '\n';
+	for(int i=0; i<filenames.size(); i++) {
+		std::cout << filenames[i] << std::endl;
+	}
+
+	if(bool_options[0]) {
+		// Compress Files
+		////////////////////////////////////////////////////////////////////////////
+		// Check for problems with file numbers
+		if(filenames.size()==0) {
+			std::cout << "Error: Please specify which file(s) to compress\n";
+			return 1;
+		}
+
+		//outname = std::string(fs::current_path())+"/"+outname;
+		std::cout << outname << std::endl;
+
+		bool print = bool_options[2];
+		bool cont;
+		Character* first_Char = nullptr;
+		Character* current = nullptr;
+		FileWrite* writer = new FileWrite();
+
+		cont = compression::mapping(filenames, first_Char);
+		if (cont) {
+			writer->setFileName(outname);
+			compression::writeHeader(writer, first_Char);
+			compression::writeBody(writer, filenames, first_Char);
+			return 0;
+		}
+
+		return 1;
+
+	} else {
+		// Decompress Files
+		////////////////////////////////////////////////////////////////////////////
+		// Check for problems with file numbers
+		if(filenames.size()>1) {
+			std::cout << "Error: Please decompress files one at a time\n";
+			return 1;
+		} else if (filenames.size() == 0) {
+			std::cout << "Error: Please specify which file to decompress\n";
+			return 1;
+		}
+	}
+
 	return 0;
 }
 
+////////////////////////////////////////////////////////////////////////////////
+// Adds files to vector
+bool addFiles(fs::path pathname, std::vector<std::string> &filenames) {
+	fs::directory_entry entry_path;
+	std::string path_str;
+	entry_path.assign(pathname);
+	if(entry_path.exists()) {
+		if(entry_path.is_directory()) {
+			std::cout << pathname << " Is Directory" << std::endl;
+			for(auto& p: fs::directory_iterator(pathname))
+				addFiles(p.path(), filenames);
+		} else {
+			std::cout << pathname << " Is File" << std::endl;
+			path_str = pathname;
+			//path_str = path_str.substr(0,path_str.size());
+			filenames.push_back(path_str);
+		}
+	} else {
+		std::cout << pathname << " Doesn't Exist" << std::endl;
+	}
+	return true;
+}
 
+////////////////////////////////////////////////////////////////////////////////
 // Configures Command Line options
 bool options(std::string option_name, std::vector<bool> &options) {
 
@@ -104,14 +176,15 @@ bool options(std::string option_name, std::vector<bool> &options) {
 			options[4] = true;
 		}
 		//std::cout << "Password Stuff" << std::endl;
-	} else if(index == 5) {
-		// Make Defaults
+	} else if(index == 5) { // Make Defaults
+	} else if(index == 6) { // Set compressed name
+		outname = option_name.substr(5);
 	}
 
 	return false;
 }
 
-
+////////////////////////////////////////////////////////////////////////////////
 // Loads Default Options from Config File
 void loadDefaults(std::vector<bool> &options) {
 	std::string line;
@@ -121,7 +194,7 @@ void loadDefaults(std::vector<bool> &options) {
 	FileRead* confreader = new FileRead();
 
 	// Load Config File
-	confreader->setFileName("config.txt");
+	confreader->setFileName("MAKEFILE_PLACEHOLDER"); // Full Path Set when Made
 	while(confreader->getLine(line)) {
 		if(line[0] != '#') {
 			option_found = false;
@@ -169,6 +242,8 @@ void loadDefaults(std::vector<bool> &options) {
 							}
 						}
 					}
+				} else if(index == 6) { // Set Compressed Name
+					outname = line.substr(5);
 				}
 			}
 		}

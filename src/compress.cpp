@@ -34,7 +34,6 @@ int main() {
 	return 1;
 }
 */
-//using namespace compression;
 
 // Add Character
 void compression::addCharacter(Character* &first_Char, char byte) {
