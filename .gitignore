@@ -36,4 +36,4 @@
 vgcore.*
 
 # Compressed Files
-*.pico
+#*.pico

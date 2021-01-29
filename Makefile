@@ -25,10 +25,10 @@ $(MAIN): $(OBJS)
 	$(CXX) $(CXXFLAGS) $(INCLUDES) -o $(MAIN) $(OBJS)
 
 replace:
-	sed -i 's/MAKEFILE_PLACEHOLDER/$(WORKINGLINK)/' src/main.cpp
+	sed -i 's/MAKEFILE_PLACEHOLDER/$(WORKINGLINK)/g' src/main.cpp
 
 unreplace:
-	sed -i 's/$(WORKINGLINK)/MAKEFILE_PLACEHOLDER/' src/main.cpp
+	sed -i 's/$(WORKINGLINK)/MAKEFILE_PLACEHOLDER/g' src/main.cpp
 
 .cpp.o:
 	$(CXX) $(CXXFLAGS) $(INCLUDES) -c -o $@ $<

@@ -1,39 +1,5 @@
 #include "compress.h"
 
-/*
-int main() {
-	std::vector<std::string> filenames;
-	std::string infilename0 = "test_files/large_corpus/E.coli";
-	std::string infilename1 = "test_files/large_corpus/bible.txt";
-	std::string infilename2 = "test_files/large_corpus/world192.txt";
-	std::string outfilename = "large_corpus.pico";
-	//std::string infilename0 = "test_files/my_tests/basic.txt";
-	//std::string infilename1 = "test_files/my_tests/hamlet.txt";
-	//std::string infilename2 = "test_files/my_tests/shakespeare.txt";
-	//std::string infilename3 = "test_files/my_tests/tetris.txt";
-	//std::string outfilename = "compressed_files/my_tests.pico";
-	filenames.push_back(infilename0);
-	filenames.push_back(infilename1);
-	filenames.push_back(infilename2);
-	//filenames.push_back(infilename3);
-
-	bool print = true;
-	bool cont;
-	Character* first_Char = nullptr;
-	Character* current = nullptr;
-	FileWrite* writer = new FileWrite();
-
-	cont = mapping(filenames, first_Char);
-	if (cont) {
-		writer->setFileName(outfilename);
-		writeHeader(writer, first_Char);
-		writeBody(writer, filenames, first_Char);
-		return 0;
-	}
-
-	return 1;
-}
-*/
 
 // Add Character
 void compression::addCharacter(Character* &first_Char, char byte) {
@@ -69,7 +35,6 @@ bool compression::mapping(std::vector<std::string> filenames, Character* &first_
 	char byte;
 	bool create_new, infile_exists, eof;
 	int num_chars = 1;
-	int files_added = 0;
 	std::string filename;
 	FileRead* freqreader = new FileRead();
 
@@ -77,11 +42,11 @@ bool compression::mapping(std::vector<std::string> filenames, Character* &first_
 		filename = filenames[i];
 		infile_exists = freqreader->setFileName(filename);
 		if(infile_exists) {
+			//std::cout << filename << "Exists for reading\n";
 			for(uint j=0; j<filename.size(); j++) {
 				addCharacter(first_Char, filename[j]);
 			}
 			eof = false;
-			files_added++;
 			while(!eof) {
 				eof = !(freqreader->readChar());
 				byte = freqreader->getChar();
@@ -105,17 +70,12 @@ bool compression::mapping(std::vector<std::string> filenames, Character* &first_
 		// Add End of Title Characters
 		current_Char->next = new Character(false,false,false,true);
 		current_Char = current_Char->next;
-		current_Char->setNum(files_added);
+		current_Char->setNum(filenames.size());
 		num_chars++;
 		// Add End of Individual File Characters
 		current_Char->next = new Character(false,true,false,false);
 		current_Char = current_Char->next;
-		current_Char->setNum(files_added);
-		num_chars++;
-		//Add Delimiter
-		current_Char->next = new Character(true,false,false,false);
-		current_Char = current_Char->next;
-		current_Char->setNum(num_chars+2);
+		current_Char->setNum(filenames.size());
 		num_chars++;
 
 		sort(first_Char);
@@ -137,25 +97,19 @@ void compression::writeHeader(FileWrite* &headerwriter, Character* first_Char) {
 	Character* del = nullptr;
 	int del_size;
 	int buffer_size = 32;
-	std::string strbuffer = "1";
+	std::string strbuffer = "010100000100100101000011";
 	std::string delimiter;
 	char* buffer_array = new char[buffer_size];
 	int byte_index, bit_index, str_index, max_bytes;
 	bool skip_ascii;
 
-	// Find the Delimiter
-	while(current_Char!=nullptr && del==nullptr) {
-		if(current_Char->isDelimiter()) {del = current_Char;}
+	/*
+	// Print Out "Dictionary"
+	while(current_Char!=nullptr) {
+		std::cout << current_Char->getCharacter() << " : " << current_Char->getBinary() << std::endl;
 		current_Char = current_Char->next;
 	}
-	// Set up the Header with the Delimiter
-	del_size = (del->getBinary()).size();
-	delimiter = del->getBinary();
-	for(int i=0; i<del_size; i++) {
-		strbuffer += "0";
-	}
-	strbuffer += "1";
-	strbuffer += delimiter;
+	*/
 
 	current_Char = first_Char;
 	while(current_Char!=nullptr) {
@@ -180,8 +134,12 @@ void compression::writeHeader(FileWrite* &headerwriter, Character* first_Char) {
 			if(!skip_ascii) {
 				strbuffer += bitf::toBinaryString(current_Char->getCharacter());
 			}
+			for(int i=0; i<(current_Char->getBinary()).size(); i++) {
+				strbuffer += "0";
+			}
+			strbuffer += "1";
 			strbuffer += current_Char->getBinary();
-			strbuffer += delimiter;
+			//strbuffer += delimiter;
 		}
 		current_Char = current_Char->next;
 		if (current_Char==nullptr) {strbuffer += "1000";} //End of Header Indicator
@@ -309,6 +267,7 @@ void compression::writeBody(FileWrite* &writer, std::vector<std::string> filenam
 			}
 		}
 	}
+	writer->writeBuffer(buffer_array, max_bytes);
 
 	writer->closeFile();
 }

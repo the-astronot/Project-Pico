@@ -5,16 +5,17 @@ PROJECT-PICO:
 		- Character Frequency: 100%
 		- Tree Development: 100%
 		- Assigning Binary Strings to Characters: 100%
-		- Build Header for Compressed File - 100%
+		- Build Header for Compressed File : 100%
 		- Replace Characters with Binary Strings: 100%
 		- Write Binary Strings to File: 100%
 
 	DECOMPRESSION
-		- Get Dictionary from header of file: 0%
-		- For all strings, convert to regular: 0%
-		- Check Endianness:
+		- Get Dictionary from header of file: 100%
+		- For all strings, convert to regular: 100%
+		- Check Endianness: 50%
 
 	APPLICATION
-		- Allow flags to customize settings: 50%
-		- Create base configs file: 50%
+		- Allow flags to customize settings: 75%
+		- Create base configs file: 75%
 		- Create Makefile: 100%
+		- Set up Password Protection: 0%

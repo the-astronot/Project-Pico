@@ -40,17 +40,19 @@ int main(int argc, char *argv[]) {
 	}
 
 	// Begin Operations
-	for(int i=0; i<bool_options.size(); i++) {
-		std::cout << bool_str[i] << " : ";
-		if(bool_options[i]) {
-			std::cout << "True\n";
-		} else {
-			std::cout << "False\n";
+	if(bool_options[2] || bool_options[3]) {
+		for(int i=0; i<bool_options.size(); i++) {
+			std::cout << bool_str[i] << " : ";
+			if(bool_options[i]) {
+				std::cout << "True\n";
+			} else {
+				std::cout << "False\n";
+			}
 		}
-	}
 
-	for(int i=0; i<filenames.size(); i++) {
-		std::cout << filenames[i] << std::endl;
+		for(int i=0; i<filenames.size(); i++) {
+			std::cout << filenames[i] << std::endl;
+		}
 	}
 
 	if(bool_options[0]) {
@@ -63,9 +65,9 @@ int main(int argc, char *argv[]) {
 		}
 
 		//outname = std::string(fs::current_path())+"/"+outname;
-		std::cout << outname << std::endl;
+		//std::cout << outname << std::endl;
 
-		bool print = bool_options[2];
+		bool print = (bool_options[2]||bool_options[3]);
 		bool cont;
 		Character* first_Char = nullptr;
 		Character* current = nullptr;
@@ -92,6 +94,14 @@ int main(int argc, char *argv[]) {
 			std::cout << "Error: Please specify which file to decompress\n";
 			return 1;
 		}
+
+		bool reg_end, success;
+		FileRead* reader = new FileRead();
+		reader->setFileName(filenames[0]);
+
+		reg_end = decompress::checkEndianness(reader);
+		success = decompress::constructDict(reader, reg_end);
+		decompress::decompressFiles(reader);
 	}
 
 	return 0;
@@ -105,17 +115,16 @@ bool addFiles(fs::path pathname, std::vector<std::string> &filenames) {
 	entry_path.assign(pathname);
 	if(entry_path.exists()) {
 		if(entry_path.is_directory()) {
-			std::cout << pathname << " Is Directory" << std::endl;
+			//std::cout << pathname << " Is Directory" << std::endl;
 			for(auto& p: fs::directory_iterator(pathname))
 				addFiles(p.path(), filenames);
 		} else {
-			std::cout << pathname << " Is File" << std::endl;
+			//std::cout << pathname << " Is File" << std::endl;
 			path_str = pathname;
-			//path_str = path_str.substr(0,path_str.size());
 			filenames.push_back(path_str);
 		}
 	} else {
-		std::cout << pathname << " Doesn't Exist" << std::endl;
+		//std::cout << pathname << " Doesn't Exist" << std::endl;
 	}
 	return true;
 }
@@ -142,16 +151,13 @@ bool options(std::string option_name, std::vector<bool> &options) {
 
 	if(!option_exists) {
 		return true;
-		//std::cout << "No option exists" << std::endl;
 	}
 
 	// All the Options
 	if(index == 0) { // Compressing
 		options[0] = true;
-		//std::cout << "Compressing" << '\n';
 	} else if(index == 1) { // Decompressing
 		options[0] = false;
-		//std::cout << "Decompressing" << '\n';
 	} else if(index == 2) { // Display
 		option_name = option_name.substr(8);
 		if(option_name == "none") {
@@ -167,7 +173,6 @@ bool options(std::string option_name, std::vector<bool> &options) {
 			options[2] = false;
 			options[3] = true;
 		}
-		//std::cout << "Display Stuff" << std::endl;
 	} else if(index == 3) { // Password
 		password = option_name.substr(9);
 		if(password == "" || password == "none") {
@@ -175,7 +180,6 @@ bool options(std::string option_name, std::vector<bool> &options) {
 		} else {
 			options[4] = true;
 		}
-		//std::cout << "Password Stuff" << std::endl;
 	} else if(index == 5) { // Make Defaults
 	} else if(index == 6) { // Set compressed name
 		outname = option_name.substr(5);

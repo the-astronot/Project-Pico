@@ -5,5 +5,5 @@
 application=compression
 display=none
 password=none
-name=comp.pico
+name=compressed_file.pico
 hotel=trivago

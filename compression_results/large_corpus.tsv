@@ -1,5 +1,5 @@
 Filename	Orig_Size(Bytes)	Comp_Size(Bytes)	Comp_Ratio	CompSize/UnCompSize	Time_to_Compress(s)	Time_to_Decompress(s)
-bible.txt	4047392	2223155	1.82:1	.549	0.91
-E.coli	4638690	1302292	3.56	.281	0.62
-world192.txt	2473400	1559898	1.59:1	.631	0.76
-*	11159482	6014785	1.86:1	.539	2.33
+bible.txt	4047392	
+E.coli	4638690
+world192.txt	2473400
+*	11159482	6014582	1.86:1	.539	2.52	16.6

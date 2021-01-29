@@ -10,7 +10,7 @@
 #include "FileWrite.h"
 #include "Character.h"
 #include "compress.h"
-//#include "decompress.h"
+#include "decompress.h"
 
 
 namespace fs = std::filesystem;
