@@ -37,7 +37,7 @@ pico -decompress compressed_filename.pico
 | Large Corpus | 11.2 | 6.0 |
 
 ### Coming Next
-More Experimental Results
-Better options for printing intermediary results
-Optional password protected files
-Write -makedefault flag
+* More Experimental Results
+* Better options for printing intermediary results
+* Optional password protected files
+* Write -makedefault flag
