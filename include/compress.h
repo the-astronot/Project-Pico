@@ -12,13 +12,17 @@
 #include "Tree.h"
 #include "leaff.h"
 
-typedef unsigned int uint;
+namespace compression {
 
-void getInputFiles();
-void addCharacter(Character* &first_Char, char byte);
-bool mapping(std::vector<std::string> filenames, Character* &first_Char);
-void writeHeader(FileWrite* &headerwriter, Character* first_Char);
-void writeBody(FileWrite* &writer, std::vector<std::string> filenames,
-	 							Character* first_Char);
+	typedef unsigned int uint;
+
+	void getInputFiles();
+	void addCharacter(Character* &first_Char, char byte);
+	bool mapping(std::vector<std::string> filenames, Character* &first_Char);
+	void writeHeader(FileWrite* &headerwriter, Character* first_Char);
+	void writeBody(FileWrite* &writer, std::vector<std::string> filenames,
+		 							Character* first_Char);
+
+}
 
 #endif

@@ -34,3 +34,6 @@
 # Junk files
 .fuse*
 vgcore.*
+
+# Compressed Files
+#*.pico

@@ -1,0 +1,9 @@
+# Config File for Project-Pico File Compressor/Decompressor
+# Accessed Upon Each Use
+# Edit with text editor or command line args -makedefault-<ARG>
+
+application=compression
+display=none
+password=none
+name=compressed_file.pico
+hotel=trivago

@@ -1,6 +1,5 @@
 Filename	Orig_Size(Bytes)	Comp_Size(Bytes)	Comp_Ratio	CompSize/UnCompSize	Time_to_Compress(s)	Time_to_Decompress(s)
-hamlet.txt	195835	112435	1.74:1	.574	0.09
-shakespeare.txt	5447529	3202619	1.70:1	.588	1.38
-basic.txt	36	27	1.33:1	.750	0.00
-tetris.txt	3332	2115	1.58:1	.635	0.02
-*.txt	5646732	3318117	1.70:1	.588	1.53
+hamlet.txt	195835	
+shakespeare.txt	5447529
+basic.txt	36
+*.txt
